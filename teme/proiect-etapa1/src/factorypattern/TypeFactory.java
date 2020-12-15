@@ -7,7 +7,21 @@ import transformdata.CalcDistributor;
 
 import java.util.ArrayList;
 
-public class TypeFactory {
+public final class TypeFactory {
+    private static TypeFactory instance = null;
+
+    private TypeFactory() { }
+
+    /**
+     * Singleton patter
+     * @return O instanta
+     */
+    public static TypeFactory getInstance() {
+        if (instance == null) {
+            instance = new TypeFactory();
+        }
+        return instance;
+    }
     /**
      * Metoda verifica actiunea dorita
      * @param cons - lista de input a consumatorilor

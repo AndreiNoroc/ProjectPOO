@@ -29,7 +29,7 @@ public final class Main {
         ObjectMapper obMap = new ObjectMapper();
         InputData input = obMap.readValue(new File(args[0]), InputData.class);
 
-        TypeFactory typeFactory = new TypeFactory();
+        TypeFactory typeFactory = TypeFactory.getInstance();
 
         ArrayList<CalcDistributor> distributors = new ArrayList<>();
         ArrayList<CalcDistributor> outDistributors = new ArrayList<>();
