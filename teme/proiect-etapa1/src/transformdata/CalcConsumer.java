@@ -11,6 +11,7 @@ public class CalcConsumer {
     private int contractLen;
     private boolean isBankrupt;
     private boolean preBankrupt;
+    private static double value = 1.2;
 
     public CalcConsumer(final int id, final int initialBudget, final int monthlyIncome) {
         this.id = id;
@@ -105,6 +106,14 @@ public class CalcConsumer {
         this.priceOldDistr = priceOldDistr;
     }
 
+    public static double getValue() {
+        return value;
+    }
+
+    public static void setValue(final double value) {
+        CalcConsumer.value = value;
+    }
+
     /**
      * Metoda alege un distributor pentru consumatorii noi
      * @param newDistr - noul distribuitor
@@ -132,15 +141,16 @@ public class CalcConsumer {
                 this.preBankrupt = true;
             }
         } else {
-            int var1 = (int) Math.round(Math.floor(1.2 * this.priceOldDistr));
+            int var1 = (int) Math.round(Math.floor(value * this.priceOldDistr));
+
             if (this.initialBudget - (var1 + this.priceDistr) < 0) {
                 this.isBankrupt = true;
             } else {
-                int var = (int) Math.round(Math.floor(1.2 * this.priceOldDistr));
+                int var = (int) Math.round(Math.floor(value * this.priceOldDistr));
                 this.initialBudget -= var + this.priceDistr;
 
                 actualDistr.addPayConsumer(this.priceDistr);
-                oldDistr.addPayConsumer((int) Math.round(Math.floor(1.2 * this.priceOldDistr)));
+                oldDistr.addPayConsumer((int) Math.round(Math.floor(value * this.priceOldDistr)));
 
                 this.preBankrupt = false;
             }

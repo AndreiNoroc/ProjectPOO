@@ -5,6 +5,8 @@ import consumer.OutConsumer;
 import contract.Contract;
 import distributor.Distributor;
 import distributor.OutDistributor;
+import factorypattern.TypeFactory;
+import factorypattern.TypePerson;
 import input.InputData;
 import output.OutputData;
 import transformdata.CalcConsumer;
@@ -15,7 +17,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Main {
+public final class Main {
+
+    private Main() { }
 
     /**
      * Metoda principala in care incepe rularea programului
@@ -25,31 +29,28 @@ public class Main {
         ObjectMapper obMap = new ObjectMapper();
         InputData input = obMap.readValue(new File(args[0]), InputData.class);
 
+        TypeFactory typeFactory = new TypeFactory();
+
         ArrayList<CalcDistributor> distributors = new ArrayList<>();
         ArrayList<CalcDistributor> outDistributors = new ArrayList<>();
         ArrayList<Distributor> initsDistributor = input.getInitialData().getDistributors();
-        for (Distributor d : initsDistributor) {
-            CalcDistributor cd = new CalcDistributor(d.getId(), d.getContractLength(),
-                    d.getInitialBudget(), d.getInitialInfrastructureCost(),
-                    d.getInitialProductionCost());
-            cd.setContractPrice();
-            distributors.add(cd);
-            outDistributors.add(cd);
-        }
+
+        TypePerson type1 = typeFactory.getType(null,
+                initsDistributor, null,
+                distributors, null, outDistributors);
+        type1.read(null, initsDistributor, null, distributors, null, outDistributors);
 
         distributors.sort(Main::compare);
 
         ArrayList<CalcConsumer> consumers = new ArrayList<>();
         ArrayList<CalcConsumer> outConsumer = new ArrayList<>();
         ArrayList<Consumer> initsConsumer = input.getInitialData().getConsumers();
-        for (Consumer c : initsConsumer) {
-            CalcConsumer cc = new CalcConsumer(c.getId(),
-                    c.getInitialBudget(), c.getMonthlyIncome());
-            cc.chooseDistributor(distributors.get(0));
-            cc.setActual();
-            consumers.add(cc);
-            outConsumer.add(cc);
-        }
+
+        TypePerson type2 = typeFactory.getType(initsConsumer,
+                initsDistributor, consumers, distributors,
+                outConsumer, outDistributors);
+        type2.read(initsConsumer, initsDistributor, consumers,
+                distributors, outConsumer, outDistributors);
 
         distributors.get(0).getClients().addAll(consumers);
 
@@ -61,6 +62,7 @@ public class Main {
         ArrayList<CalcConsumer> rmvConsumer = new ArrayList<>();
         ArrayList<CalcDistributor> rmvDistributor = new ArrayList<>();
         ArrayList<MonthlyUpdate> updates = input.getMonthlyUpdates();
+
         for (MonthlyUpdate u : updates) {
             ArrayList<Consumer> newConsumers = u.getNewConsumers();
             if (newConsumers.size() != 0) {

@@ -11,6 +11,7 @@ public class CalcDistributor {
     private int finalPrice;
     private ArrayList<CalcConsumer> clients;
     private boolean isBankrupt;
+    private static double value = 0.2;
 
     public CalcDistributor(final int id, final int contractLength,
                            final int initialBudget,
@@ -90,6 +91,14 @@ public class CalcDistributor {
         this.isBankrupt = bankrupt;
     }
 
+    public static double getValue() {
+        return value;
+    }
+
+    public static void setValue(final double value) {
+        CalcDistributor.value = value;
+    }
+
     /**
      * Metoda calculeaza pretul contractului
      */
@@ -98,11 +107,11 @@ public class CalcDistributor {
             int var = (int) Math.round(Math.floor(initialInfrastructureCost / clients.size()));
             this.finalPrice = var
                     + initialProductionCost
-                    + (int) Math.round(Math.floor(0.2 * initialProductionCost));
+                    + (int) Math.round(Math.floor(value * initialProductionCost));
         } else {
             this.finalPrice = this.initialInfrastructureCost
                     + this.initialProductionCost
-                    + (int) Math.round(Math.floor(0.2 * this.initialProductionCost));
+                    + (int) Math.round(Math.floor(value * this.initialProductionCost));
         }
     }
 

@@ -1,10 +1,6 @@
 Starting audit...
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcConsumer.java:135:52: '1.2' is a magic number. [MagicNumber]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcConsumer.java:139:55: '1.2' is a magic number. [MagicNumber]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcConsumer.java:143:69: '1.2' is a magic number. [MagicNumber]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcDistributor.java:101:51: '0.2' is a magic number. [MagicNumber]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcDistributor.java:105:51: '0.2' is a magic number. [MagicNumber]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/Main.java:18:1: Utility classes should not have a public or default constructor. [HideUtilityClassConstructor]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/Main.java:24:5: Method length is 164 lines (max allowed is 150). [MethodLength]
+[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcConsumer.java:14:35: '1.2' is a magic number. [MagicNumber]
+[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcDistributor.java:14:35: '0.2' is a magic number. [MagicNumber]
+[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/Main.java:28:5: Method length is 162 lines (max allowed is 150). [MethodLength]
 Audit done.
-Checkstyle ends with 7 errors.
+Checkstyle ends with 3 errors.
