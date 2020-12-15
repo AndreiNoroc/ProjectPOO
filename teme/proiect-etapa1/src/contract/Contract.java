@@ -1,48 +1,58 @@
 package contract;
 
 public class Contract {
-    private int consumerID;
+    private int consumerId;
     private int price;
     private int remainedContractMonths;
 
     public Contract() { }
 
-    public Contract(int consumerID, int price, int remainedContractMonths) {
-        this.consumerID = consumerID;
+    public Contract(final int consumerId, final int price, final int remainedContractMonths) {
+        this.consumerId = consumerId;
         this.price = price;
         this.remainedContractMonths = remainedContractMonths;
     }
 
-    public int getConsumerID() {
-        return consumerID;
+    public final int getConsumerId() {
+        return consumerId;
     }
 
-    public void setConsumerID(int consumerID) {
-        this.consumerID = consumerID;
+    public final void setConsumerId(final int consumerId) {
+        this.consumerId = consumerId;
     }
 
-    public int getPrice() {
+    public final int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public final void setPrice(final int price) {
         this.price = price;
     }
 
-    public int getRemainedContractMonths() {
+    public final int getRemainedContractMonths() {
         return remainedContractMonths;
     }
 
-    public void setRemainedContractMonths(int remainedContractMonths) {
+    public final void setRemainedContractMonths(final int remainedContractMonths) {
         this.remainedContractMonths = remainedContractMonths;
     }
 
     @Override
-    public String toString() {
-        return "Contract{" +
-                "consumerID=" + consumerID +
-                ", price=" + price +
-                ", remainedContractMonths=" + remainedContractMonths +
+    public final String toString() {
+        return "Contract{"
+                +
+                "consumerId="
+                +
+                consumerId
+                +
+                ", price="
+                +
+                price
+                +
+                ", remainedContractMonths="
+                +
+                remainedContractMonths
+                +
                 '}';
     }
 }

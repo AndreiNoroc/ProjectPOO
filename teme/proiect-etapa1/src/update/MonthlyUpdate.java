@@ -11,32 +11,40 @@ public class MonthlyUpdate {
 
     public MonthlyUpdate() { }
 
-    public MonthlyUpdate(ArrayList<Consumer> newConsumers, ArrayList<Change> costsChanges) {
+    public MonthlyUpdate(final ArrayList<Consumer> newConsumers,
+                         final ArrayList<Change> costsChanges) {
         this.newConsumers = newConsumers;
         this.costsChanges = costsChanges;
     }
 
-    public ArrayList<Consumer> getNewConsumers() {
+    public final ArrayList<Consumer> getNewConsumers() {
         return newConsumers;
     }
 
-    public void setNewConsumers(ArrayList<Consumer> newConsumers) {
+    public final void setNewConsumers(final ArrayList<Consumer> newConsumers) {
         this.newConsumers = newConsumers;
     }
 
-    public ArrayList<Change> getCostsChanges() {
+    public final ArrayList<Change> getCostsChanges() {
         return costsChanges;
     }
 
-    public void setCostsChanges(ArrayList<Change> costsChanges) {
+    public final void setCostsChanges(final ArrayList<Change> costsChanges) {
         this.costsChanges = costsChanges;
     }
 
     @Override
-    public String toString() {
-        return "MonthlyUpdate{" +
-                "newConsumers=" + newConsumers +
-                ", costsChanges=" + costsChanges +
+    public final String toString() {
+        return "MonthlyUpdate{"
+                +
+                "newConsumers="
+                +
+                newConsumers
+                +
+                ", costsChanges="
+                +
+                costsChanges
+                +
                 '}';
     }
 }

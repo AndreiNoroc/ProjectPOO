@@ -7,42 +7,52 @@ public class Change {
 
     public Change() { }
 
-    public Change(int id, int infrastructureCost, int productionCost) {
+    public Change(final int id, final int infrastructureCost, final int productionCost) {
         this.id = id;
         this.infrastructureCost = infrastructureCost;
         this.productionCost = productionCost;
     }
 
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public final void setId(final int id) {
         this.id = id;
     }
 
-    public int getInfrastructureCost() {
+    public final int getInfrastructureCost() {
         return infrastructureCost;
     }
 
-    public void setInfrastructureCost(int infrastructureCost) {
+    public final void setInfrastructureCost(final int infrastructureCost) {
         this.infrastructureCost = infrastructureCost;
     }
 
-    public int getProductionCost() {
+    public final int getProductionCost() {
         return productionCost;
     }
 
-    public void setProductionCost(int productionCost) {
+    public final void setProductionCost(final int productionCost) {
         this.productionCost = productionCost;
     }
 
     @Override
-    public String toString() {
-        return "costChange{" +
-                "id=" + id +
-                ", infrastructureCost=" + infrastructureCost +
-                ", productionCost=" + productionCost +
+    public final String toString() {
+        return "costChange{"
+                +
+                "id="
+                +
+                id
+                +
+                ", infrastructureCost="
+                +
+                infrastructureCost
+                +
+                ", productionCost="
+                +
+                productionCost
+                +
                 '}';
     }
 }

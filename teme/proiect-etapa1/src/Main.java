@@ -17,100 +17,164 @@ import java.util.Comparator;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        System.out.println(args[0]);
+    /**
+     * Metoda principala in care incepe rularea programului
+     * @param args - contine fisierele de input si output
+     */
+    public static void main(final String[] args) throws Exception {
         ObjectMapper obMap = new ObjectMapper();
         InputData input = obMap.readValue(new File(args[0]), InputData.class);
-        System.out.println(input);
 
         ArrayList<CalcDistributor> distributors = new ArrayList<>();
+        ArrayList<CalcDistributor> outDistributors = new ArrayList<>();
         ArrayList<Distributor> initsDistributor = input.getInitialData().getDistributors();
         for (Distributor d : initsDistributor) {
-            CalcDistributor cd = new CalcDistributor(d.getId(), d.getContractLength(), d.getInitialBudget(), d.getInitialInfrastructureCost(), d.getInitialProductionCost());
-            cd.setFinalPrice(d.getInitialInfrastructureCost() + d.getInitialProductionCost() + (int) Math.round(Math.floor(0.2 * d.getInitialProductionCost())));
+            CalcDistributor cd = new CalcDistributor(d.getId(), d.getContractLength(),
+                    d.getInitialBudget(), d.getInitialInfrastructureCost(),
+                    d.getInitialProductionCost());
+            cd.setContractPrice();
             distributors.add(cd);
+            outDistributors.add(cd);
         }
 
         distributors.sort(Main::compare);
 
         ArrayList<CalcConsumer> consumers = new ArrayList<>();
+        ArrayList<CalcConsumer> outConsumer = new ArrayList<>();
         ArrayList<Consumer> initsConsumer = input.getInitialData().getConsumers();
         for (Consumer c : initsConsumer) {
-            CalcConsumer cc = new CalcConsumer(c.getId(), c.getInitialBudget(), c.getMonthlyIncome(), distributors.get(0).getFinalPrice(), distributors.get(0).getContractLength());
+            CalcConsumer cc = new CalcConsumer(c.getId(),
+                    c.getInitialBudget(), c.getMonthlyIncome());
+            cc.chooseDistributor(distributors.get(0));
             cc.setActual();
             consumers.add(cc);
+            outConsumer.add(cc);
         }
 
         distributors.get(0).getClients().addAll(consumers);
 
         for (CalcDistributor cd : distributors) {
             cd.setActualBudget();
+            cd.setContractPrice();
         }
 
-
+        ArrayList<CalcConsumer> rmvConsumer = new ArrayList<>();
+        ArrayList<CalcDistributor> rmvDistributor = new ArrayList<>();
         ArrayList<MonthlyUpdate> updates = input.getMonthlyUpdates();
         for (MonthlyUpdate u : updates) {
-            ArrayList<Change> changes = u.getCostsChanges();
+            ArrayList<Consumer> newConsumers = u.getNewConsumers();
+            if (newConsumers.size() != 0) {
+                for (Consumer c : newConsumers) {
+                    CalcConsumer cc = new CalcConsumer(c.getId(),
+                            c.getInitialBudget(), c.getMonthlyIncome());
+                    consumers.add(cc);
+                    outConsumer.add(cc);
+                }
+            }
 
-            for (Change ch : changes) {
-                for (CalcDistributor d : distributors) {
-                    if (ch.getId() == d.getId()) {
-                        d.setInitialInfrastructureCost(ch.getInfrastructureCost());
-                        d.setInitialProductionCost(ch.getProductionCost());
-                        d.setContractPrice();
-                        break;
+            ArrayList<Change> changes = u.getCostsChanges();
+            if (changes.size() != 0) {
+                for (Change ch : changes) {
+                    for (CalcDistributor d : distributors) {
+                        if (ch.getId() == d.getId()) {
+                            d.setInitialProductionCost(ch.getProductionCost());
+                            d.setInitialInfrastructureCost(ch.getInfrastructureCost());
+                        }
                     }
                 }
+            }
+
+            for (CalcDistributor cd : distributors) {
+                cd.setContractPrice();
             }
 
             distributors.sort(Main::compare);
 
-            ArrayList<Consumer> newConsumers = u.getNewConsumers();
-            ArrayList<CalcConsumer> newClients = distributors.get(0).getClients();
-            for (Consumer c : newConsumers) {
-                CalcConsumer cc = new CalcConsumer(c.getId(), c.getInitialBudget(), c.getMonthlyIncome(), distributors.get(0).getFinalPrice(), distributors.get(0).getContractLength());
-                consumers.add(cc);
-                newClients.add(cc);
+
+            for (CalcConsumer cc : consumers) {
+                if (cc.getPriceDistr() != 0) {
+                    if (cc.getContractLen() == 0) {
+                        cc.getActualDistr().getClients().remove(cc);
+
+                        cc.setOldDistr(cc.getActualDistr());
+                        cc.setPriceOldDistr(cc.getPriceDistr());
+                        cc.setActualDistr(distributors.get(0));
+                        cc.setContractLen(distributors.get(0).getContractLength());
+                        cc.setPriceDistr(distributors.get(0).getFinalPrice());
+                        distributors.get(0).getClients().add(cc);
+                    }
+
+                    cc.setActual();
+
+                    if (cc.isBankrupt()) {
+                        rmvConsumer.add(cc);
+                    } else {
+                        cc.setOldDistr(cc.getActualDistr());
+                        cc.setPriceOldDistr(cc.getPriceDistr());
+                    }
+                }
             }
 
             for (CalcConsumer cc : consumers) {
                 if (cc.getContractLen() == 0) {
-                    for (CalcDistributor cd : distributors) {
-                        if (cd.getClients().contains(cc)) {
-                            cd.getClients().remove(cc);
-                            break;
-                        }
+                    if (cc.getPriceDistr() == 0) {
+                        distributors.get(0).getClients().add(cc);
+                        cc.chooseDistributor(distributors.get(0));
+                        cc.setActual();
                     }
-
-                    cc.setContractLen(distributors.get(0).getContractLength());
-                    cc.setInitialBudget(distributors.get(0).getFinalPrice());
-                    distributors.get(0).getClients().add(cc);
                 }
-
-                cc.setActual();
             }
 
             for (CalcDistributor cd : distributors) {
                 cd.setActualBudget();
+                if (cd.isBankrupt()) {
+                    rmvDistributor.add(cd);
+                }
+            }
+
+            if (rmvConsumer.size() != 0) {
+                for (CalcConsumer cc : rmvConsumer) {
+                    cc.getActualDistr().getClients().remove(cc);
+                    consumers.remove(cc);
+                }
+
+                rmvConsumer.clear();
+            }
+
+            if (rmvDistributor.size() != 0) {
+                for (CalcDistributor cd : rmvDistributor) {
+                    if (cd.getClients().size() != 0) {
+                        for (CalcConsumer cc : cd.getClients()) {
+                            cc.setContractLen(0);
+                        }
+                        cd.getClients().clear();
+                    }
+                    distributors.remove(cd);
+                }
+
+                rmvDistributor.clear();
             }
         }
 
         ArrayList<OutConsumer> lastConsumers = new ArrayList<>();
-        for (CalcConsumer cc : consumers) {
-            OutConsumer consumer = new OutConsumer(cc.getId(), cc.isBankrupt(), cc.getInitialBudget());
+        for (CalcConsumer cc : outConsumer) {
+            OutConsumer consumer = new OutConsumer(cc.getId(),
+                    cc.isBankrupt(), cc.getInitialBudget());
             lastConsumers.add(consumer);
         }
         lastConsumers.sort(Comparator.comparingInt(OutConsumer::getId));
 
         ArrayList<OutDistributor> lastDistributors = new ArrayList<>();
-        for (CalcDistributor cd : distributors) {
+        for (CalcDistributor cd : outDistributors) {
             ArrayList<Contract> contracts = new ArrayList<>();
             for (CalcConsumer cc : cd.getClients()) {
-                Contract contract = new Contract(cc.getId(), cc.getPriceDistr(), cc.getContractLen());
+                Contract contract = new Contract(cc.getId(),
+                        cc.getPriceDistr(), cc.getContractLen());
                 contracts.add(contract);
             }
 
-            OutDistributor distributor = new OutDistributor(cd.getId(), cd.getInitialBudget(), cd.isBankrupt(), contracts);
+            OutDistributor distributor = new OutDistributor(cd.getId(),
+                    cd.getInitialBudget(), cd.isBankrupt(), contracts);
             lastDistributors.add(distributor);
         }
         lastDistributors.sort(Comparator.comparingInt(OutDistributor::getId));
@@ -119,10 +183,16 @@ public class Main {
         output.setConsumers(lastConsumers);
         output.setDistributors(lastDistributors);
 
-        obMap.writeValue(new File(args[1]), output);
+        obMap.writerWithDefaultPrettyPrinter().writeValue(new File(args[1]), output);
     }
 
-    private static int compare(CalcDistributor c1, CalcDistributor c2) {
+    /**
+     * Metoda compara preturile distributorilor
+     * @param c1 - pretul primului distr
+     * @param c2 - pretul celui de al doilea
+     * @return Diferenta dintr preturi
+     */
+    private static int compare(final CalcDistributor c1, final CalcDistributor c2) {
         return c1.getFinalPrice() - c2.getFinalPrice();
     }
 }

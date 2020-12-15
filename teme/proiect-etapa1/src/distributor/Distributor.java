@@ -9,7 +9,9 @@ public class Distributor {
 
     public Distributor() { }
 
-    public Distributor(int id, int contractLength, int initialBudget, int initialInfrastructureCost, int initialProductionCost) {
+    public Distributor(final int id, final int contractLength,
+                       final int initialBudget, final int initialInfrastructureCost,
+                       final int initialProductionCost) {
         this.id = id;
         this.contractLength = contractLength;
         this.initialBudget = initialBudget;
@@ -17,54 +19,70 @@ public class Distributor {
         this.initialProductionCost = initialProductionCost;
     }
 
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public final void setId(final int id) {
         this.id = id;
     }
 
-    public int getContractLength() {
+    public final int getContractLength() {
         return contractLength;
     }
 
-    public void setContractLength(int contractLength) {
+    public final void setContractLength(final int contractLength) {
         this.contractLength = contractLength;
     }
 
-    public int getInitialBudget() {
+    public final int getInitialBudget() {
         return initialBudget;
     }
 
-    public void setInitialBudget(int initialBudget) {
+    public final void setInitialBudget(final int initialBudget) {
         this.initialBudget = initialBudget;
     }
 
-    public int getInitialInfrastructureCost() {
+    public final int getInitialInfrastructureCost() {
         return initialInfrastructureCost;
     }
 
-    public void setInitialInfrastructureCost(int initialInfrastructureCost) {
+    public final void setInitialInfrastructureCost(final int initialInfrastructureCost) {
         this.initialInfrastructureCost = initialInfrastructureCost;
     }
 
-    public int getInitialProductionCost() {
+    public final int getInitialProductionCost() {
         return initialProductionCost;
     }
 
-    public void setInitialProductionCost(int initialProductionCost) {
+    public final void setInitialProductionCost(final int initialProductionCost) {
         this.initialProductionCost = initialProductionCost;
     }
 
     @Override
-    public String toString() {
-        return "Distributor{" +
-                "id=" + id +
-                ", contractLength=" + contractLength +
-                ", initialBudget=" + initialBudget +
-                ", initialInfrastructureCost=" + initialInfrastructureCost +
-                ", initialProductionCost=" + initialProductionCost +
+    public final String toString() {
+        return "Distributor{"
+                +
+                "id="
+                +
+                id
+                +
+                ", contractLength="
+                +
+                contractLength
+                +
+                ", initialBudget="
+                +
+                initialBudget
+                +
+                ", initialInfrastructureCost="
+                +
+                initialInfrastructureCost
+                +
+                ", initialProductionCost="
+                +
+                initialProductionCost
+                +
                 '}';
     }
 }

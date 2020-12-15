@@ -1,53 +1,64 @@
 package input;
 
-import init.initData;
+import init.InitData;
 import update.MonthlyUpdate;
 
 import java.util.ArrayList;
 
 public class InputData {
     private int numberOfTurns;
-    private initData initialData;
+    private InitData initialData;
     private ArrayList<MonthlyUpdate> monthlyUpdates;
 
     public InputData() { }
 
-    public InputData(int numberOfTurns, initData initialData, ArrayList<MonthlyUpdate> monthlyUpdates) {
+    public InputData(final int numberOfTurns, final InitData initialData,
+                     final ArrayList<MonthlyUpdate> monthlyUpdates) {
         this.numberOfTurns = numberOfTurns;
         this.initialData = initialData;
         this.monthlyUpdates = monthlyUpdates;
     }
 
-    public int getNumberOfTurns() {
+    public final int getNumberOfTurns() {
         return numberOfTurns;
     }
 
-    public void setNumberOfTurns(int numberOfTurns) {
+    public final void setNumberOfTurns(final int numberOfTurns) {
         this.numberOfTurns = numberOfTurns;
     }
 
-    public initData getInitialData() {
+    public final InitData getInitialData() {
         return initialData;
     }
 
-    public void setInitialData(initData initialData) {
+    public final void setInitialData(final InitData initialData) {
         this.initialData = initialData;
     }
 
-    public ArrayList<MonthlyUpdate> getMonthlyUpdates() {
+    public final ArrayList<MonthlyUpdate> getMonthlyUpdates() {
         return monthlyUpdates;
     }
 
-    public void setMonthlyUpdates(ArrayList<MonthlyUpdate> monthlyUpdates) {
+    public final void setMonthlyUpdates(final ArrayList<MonthlyUpdate> monthlyUpdates) {
         this.monthlyUpdates = monthlyUpdates;
     }
 
     @Override
-    public String toString() {
-        return "InputData{" +
-                "numberOfTurns=" + numberOfTurns +
-                ", initialData=" + initialData +
-                ", monthlyUpdates=" + monthlyUpdates +
+    public final String toString() {
+        return "InputData{"
+                +
+                "numberOfTurns="
+                +
+                numberOfTurns
+                +
+                ", initialData="
+                +
+                initialData
+                +
+                ", monthlyUpdates="
+                +
+                monthlyUpdates
+                +
                 '}';
     }
 }

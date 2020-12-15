@@ -11,32 +11,39 @@ public class OutputData {
 
     public OutputData() { }
 
-    public OutputData(ArrayList<OutConsumer> consumers, ArrayList distributors) {
+    public OutputData(final ArrayList<OutConsumer> consumers, final ArrayList distributors) {
         this.consumers = consumers;
         this.distributors = distributors;
     }
 
-    public ArrayList<OutConsumer> getConsumers() {
+    public final ArrayList<OutConsumer> getConsumers() {
         return consumers;
     }
 
-    public void setConsumers(ArrayList<OutConsumer> consumers) {
+    public final void setConsumers(final ArrayList<OutConsumer> consumers) {
         this.consumers = consumers;
     }
 
-    public ArrayList<OutDistributor> getDistributors() {
+    public final ArrayList<OutDistributor> getDistributors() {
         return distributors;
     }
 
-    public void setDistributors(ArrayList<OutDistributor> distributors) {
+    public final void setDistributors(final ArrayList<OutDistributor> distributors) {
         this.distributors = distributors;
     }
 
     @Override
-    public String toString() {
-        return "OutputData{" +
-                "consumers=" + consumers +
-                ", distributors=" + distributors +
+    public final String toString() {
+        return "OutputData{"
+                +
+                "consumers="
+                +
+                consumers
+                +
+                ", distributors="
+                +
+                distributors
+                +
                 '}';
     }
 }

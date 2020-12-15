@@ -5,44 +5,54 @@ public class Consumer {
     private int initialBudget;
     private int monthlyIncome;
 
-    public Consumer() {}
+    public Consumer() { }
 
-    public Consumer(int id, int initialBudget, int monthlyIncome) {
+    public Consumer(final int id, final int initialBudget, final int monthlyIncome) {
         this.id = id;
         this.initialBudget = initialBudget;
         this.monthlyIncome = monthlyIncome;
     }
 
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public final void setId(final int id) {
         this.id = id;
     }
 
-    public int getInitialBudget() {
+    public final int getInitialBudget() {
         return initialBudget;
     }
 
-    public void setInitialBudget(int initialBudget) {
+    public final void setInitialBudget(final int initialBudget) {
         this.initialBudget = initialBudget;
     }
 
-    public int getMonthlyIncome() {
+    public final int getMonthlyIncome() {
         return monthlyIncome;
     }
 
-    public void setMonthlyIncome(int monthlyIncome) {
+    public final void setMonthlyIncome(final int monthlyIncome) {
         this.monthlyIncome = monthlyIncome;
     }
 
     @Override
-    public String toString() {
-        return "Consumer{" +
-                "id=" + id +
-                ", initialBudget=" + initialBudget +
-                ", monthlyIncome=" + monthlyIncome +
+    public final String toString() {
+        return "Consumer{"
+                +
+                "id="
+                +
+                id
+                +
+                ", initialBudget="
+                +
+                initialBudget
+                +
+                ", monthlyIncome="
+                +
+                monthlyIncome
+                +
                 '}';
     }
 }

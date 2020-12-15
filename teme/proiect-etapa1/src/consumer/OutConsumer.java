@@ -7,42 +7,52 @@ public class OutConsumer {
 
     public OutConsumer() { }
 
-    public OutConsumer(int id, boolean isBankrupt, int budget) {
+    public OutConsumer(final int id, final boolean isBankrupt, final int budget) {
         this.id = id;
         this.isBankrupt = isBankrupt;
         this.budget = budget;
     }
 
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public final void setId(final int id) {
         this.id = id;
     }
 
-    public boolean isBankrupt() {
+    public final boolean isIsBankrupt() {
         return isBankrupt;
     }
 
-    public void setBankrupt(boolean bankrupt) {
+    public final void setBankrupt(final boolean bankrupt) {
         isBankrupt = bankrupt;
     }
 
-    public int getBudget() {
+    public final int getBudget() {
         return budget;
     }
 
-    public void setBudget(int budget) {
+    public final void setBudget(final int budget) {
         this.budget = budget;
     }
 
     @Override
-    public String toString() {
-        return "OutConsumer{" +
-                "id=" + id +
-                ", isBankrupt=" + isBankrupt +
-                ", budget=" + budget +
+    public final String toString() {
+        return "OutConsumer{"
+                +
+                "id="
+                +
+                id
+                +
+                ", isBankrupt="
+                +
+                isBankrupt
+                +
+                ", budget="
+                +
+                budget
+                +
                 '}';
     }
 }

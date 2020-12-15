@@ -12,7 +12,10 @@ public class CalcDistributor {
     private ArrayList<CalcConsumer> clients;
     private boolean isBankrupt;
 
-    public CalcDistributor(int id, int contractLength, int initialBudget, int initialInfrastructureCost, int initialProductionCost) {
+    public CalcDistributor(final int id, final int contractLength,
+                           final int initialBudget,
+                           final int initialInfrastructureCost,
+                           final int initialProductionCost) {
         this.id = id;
         this.contractLength = contractLength;
         this.initialBudget = initialBudget;
@@ -23,87 +26,134 @@ public class CalcDistributor {
         this.isBankrupt = false;
     }
 
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public final void setId(final int id) {
         this.id = id;
     }
 
-    public int getContractLength() {
+    public final int getContractLength() {
         return contractLength;
     }
 
-    public void setContractLength(int contractLength) {
+    public final void setContractLength(final int contractLength) {
         this.contractLength = contractLength;
     }
 
-    public int getInitialBudget() {
+    public final int getInitialBudget() {
         return initialBudget;
     }
 
-    public void setInitialBudget(int initialBudget) {
+    public final void setInitialBudget(final int initialBudget) {
         this.initialBudget = initialBudget;
     }
 
-    public int getInitialInfrastructureCost() {
+    public final int getInitialInfrastructureCost() {
         return initialInfrastructureCost;
     }
 
-    public void setInitialInfrastructureCost(int initialInfrastructureCost) {
+    public final void setInitialInfrastructureCost(final int initialInfrastructureCost) {
         this.initialInfrastructureCost = initialInfrastructureCost;
     }
 
-    public int getInitialProductionCost() {
+    public final int getInitialProductionCost() {
         return initialProductionCost;
     }
 
-    public void setInitialProductionCost(int initialProductionCost) {
+    public final void setInitialProductionCost(final int initialProductionCost) {
         this.initialProductionCost = initialProductionCost;
     }
 
-    public int getFinalPrice() {
+    public final int getFinalPrice() {
         return finalPrice;
     }
 
-    public void setFinalPrice(int finalPrice) {
+    public final void setFinalPrice(final int finalPrice) {
         this.finalPrice = finalPrice;
     }
 
-    public ArrayList<CalcConsumer> getClients() {
+    public final ArrayList<CalcConsumer> getClients() {
         return clients;
     }
 
-    public void setClients(ArrayList<CalcConsumer> clients) {
+    public final void setClients(final ArrayList<CalcConsumer> clients) {
         this.clients = clients;
     }
 
-    public boolean isBankrupt() {
+    public final boolean isBankrupt() {
         return isBankrupt;
     }
 
-    public void setBankrupt(boolean bankrupt) {
+    public final void setBankrupt(final boolean bankrupt) {
         this.isBankrupt = bankrupt;
     }
 
-    public void setContractPrice() {
-        this.finalPrice = (int) Math.round(Math.floor(initialInfrastructureCost / clients.size()) + initialProductionCost + (int) Math.round(Math.floor(0.2 * initialProductionCost)));
+    /**
+     * Metoda calculeaza pretul contractului
+     */
+    public final void setContractPrice() {
+        if (this.clients.size() != 0) {
+            int var = (int) Math.round(Math.floor(initialInfrastructureCost / clients.size()));
+            this.finalPrice = var
+                    + initialProductionCost
+                    + (int) Math.round(Math.floor(0.2 * initialProductionCost));
+        } else {
+            this.finalPrice = this.initialInfrastructureCost
+                    + this.initialProductionCost
+                    + (int) Math.round(Math.floor(0.2 * this.initialProductionCost));
+        }
     }
 
-    public void setActualBudget() {
-        this.initialBudget += this.clients.size() * this.finalPrice -(this.initialInfrastructureCost + this.initialProductionCost * this.clients.size());
+    /**
+     * Metoda face plata consumaturului la distributor
+     * @param sum - suma platita
+     */
+    public final void addPayConsumer(final int sum) {
+        this.initialBudget += sum;
+    }
+
+    /**
+     * Updateaza nugetul distributorului
+     */
+    public final void setActualBudget() {
+        this.initialBudget -= (this.initialInfrastructureCost
+                + this.initialProductionCost * this.clients.size());
+
+        if (this.initialBudget < 0) {
+            this.isBankrupt = true;
+        }
     }
 
     @Override
-    public String toString() {
-        return "CalcDistributor{" +
-                "id=" + id +
-                ", contractLength=" + contractLength +
-                ", initialBudget=" + initialBudget +
-                ", initialInfrastructureCost=" + initialInfrastructureCost +
-                ", initialProductionCost=" + initialProductionCost +
-                ", finalPrice=" + finalPrice +
+    public final String toString() {
+        return "CalcDistributor{"
+                +
+                "id="
+                +
+                id
+                +
+                ", contractLength="
+                +
+                contractLength
+                +
+                ", initialBudget="
+                +
+                initialBudget
+                +
+                ", initialInfrastructureCost="
+                +
+                initialInfrastructureCost
+                +
+                ", initialProductionCost="
+                +
+                initialProductionCost
+                +
+                ", finalPrice="
+                +
+                finalPrice
+                +
                 '}';
     }
 }
