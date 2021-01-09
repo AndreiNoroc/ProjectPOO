@@ -1,22 +1,26 @@
 package distributor;
 
+import strategies.EnergyChoiceStrategyType;
+
 public class Distributor {
     private int id;
     private int contractLength;
     private int initialBudget;
     private int initialInfrastructureCost;
-    private int initialProductionCost;
+    private int energyNeededKW;
+    private EnergyChoiceStrategyType producerStrategy;
 
     public Distributor() { }
 
     public Distributor(final int id, final int contractLength,
                        final int initialBudget, final int initialInfrastructureCost,
-                       final int initialProductionCost) {
+                       final int energyNeededKW, final EnergyChoiceStrategyType producerStrategy) {
         this.id = id;
         this.contractLength = contractLength;
         this.initialBudget = initialBudget;
         this.initialInfrastructureCost = initialInfrastructureCost;
-        this.initialProductionCost = initialProductionCost;
+        this.energyNeededKW = energyNeededKW;
+        this.producerStrategy = producerStrategy;
     }
 
     public final int getId() {
@@ -51,12 +55,20 @@ public class Distributor {
         this.initialInfrastructureCost = initialInfrastructureCost;
     }
 
-    public final int getInitialProductionCost() {
-        return initialProductionCost;
+    public final int getEnergyNeededKW() {
+        return energyNeededKW;
     }
 
-    public final void setInitialProductionCost(final int initialProductionCost) {
-        this.initialProductionCost = initialProductionCost;
+    public final void setEnergyNeededKW(final int energyNeededKW) {
+        this.energyNeededKW = energyNeededKW;
+    }
+
+    public final EnergyChoiceStrategyType getProducerStrategy() {
+        return producerStrategy;
+    }
+
+    public final void setProducerStrategy(final EnergyChoiceStrategyType producerStrategy) {
+        this.producerStrategy = producerStrategy;
     }
 
     @Override
@@ -79,9 +91,13 @@ public class Distributor {
                 +
                 initialInfrastructureCost
                 +
-                ", initialProductionCost="
+                ", energyNeededKW="
                 +
-                initialProductionCost
+                energyNeededKW
+                +
+                ", producerStrategy="
+                +
+                producerStrategy
                 +
                 '}';
     }

@@ -2,18 +2,21 @@ package output;
 
 import consumer.OutConsumer;
 import distributor.OutDistributor;
+import producers.OutProducer;
 
 import java.util.ArrayList;
 
 public class OutputData {
     private ArrayList<OutConsumer> consumers;
     private ArrayList<OutDistributor> distributors;
+    private ArrayList<OutProducer> energyProducers;
 
     public OutputData() { }
 
-    public OutputData(final ArrayList<OutConsumer> consumers, final ArrayList distributors) {
+    public OutputData(final ArrayList<OutConsumer> consumers, final ArrayList<OutDistributor> distributors, final ArrayList<OutProducer> energyProducers) {
         this.consumers = consumers;
         this.distributors = distributors;
+        this.energyProducers = energyProducers;
     }
 
     public final ArrayList<OutConsumer> getConsumers() {
@@ -32,8 +35,16 @@ public class OutputData {
         this.distributors = distributors;
     }
 
+    public final ArrayList<OutProducer> getEnergyProducers() {
+        return energyProducers;
+    }
+
+    public final void setEnergyProducers(final ArrayList<OutProducer> energyProducers) {
+        this.energyProducers = energyProducers;
+    }
+
     @Override
-    public final String toString() {
+    public String toString() {
         return "OutputData{"
                 +
                 "consumers="
@@ -43,6 +54,10 @@ public class OutputData {
                 ", distributors="
                 +
                 distributors
+                +
+                ", energyProducers="
+                +
+                energyProducers
                 +
                 '}';
     }

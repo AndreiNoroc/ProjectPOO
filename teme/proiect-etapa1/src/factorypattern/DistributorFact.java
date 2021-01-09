@@ -2,8 +2,10 @@ package factorypattern;
 
 import consumer.Consumer;
 import distributor.Distributor;
+import producers.Producer;
 import transformdata.CalcConsumer;
 import transformdata.CalcDistributor;
+import transformdata.CalcProducer;
 
 import java.util.ArrayList;
 
@@ -18,16 +20,19 @@ public class DistributorFact implements TypePerson {
      * @param allDistrs - lista tuturor distribuitorilor
      */
     @Override
-    public void read(final ArrayList<Consumer> cons, final ArrayList<Distributor> distrs,
+    public void read(final ArrayList<Consumer> cons,
+                     final ArrayList<Distributor> distrs,
+                     final ArrayList<Producer> prods,
                      final ArrayList<CalcConsumer> clcCons,
                      final ArrayList<CalcDistributor> clcDistrs,
+                     final ArrayList<CalcProducer> clcProds,
                      final ArrayList<CalcConsumer> allCons,
-                     final ArrayList<CalcDistributor> allDistrs) {
+                     final ArrayList<CalcDistributor> allDistrs,
+                     final ArrayList<CalcProducer> allProds) {
         for (Distributor d : distrs) {
             CalcDistributor cd = new CalcDistributor(d.getId(), d.getContractLength(),
                     d.getInitialBudget(), d.getInitialInfrastructureCost(),
-                    d.getInitialProductionCost());
-            cd.setContractPrice();
+                    d.getEnergyNeededKW(), d.getProducerStrategy());
             clcDistrs.add(cd);
             allDistrs.add(cd);
         }

@@ -2,8 +2,10 @@ package factorypattern;
 
 import consumer.Consumer;
 import distributor.Distributor;
+import producers.Producer;
 import transformdata.CalcConsumer;
 import transformdata.CalcDistributor;
+import transformdata.CalcProducer;
 
 import java.util.ArrayList;
 
@@ -35,18 +37,17 @@ public final class TypeFactory {
      */
     public TypePerson getType(final ArrayList<Consumer> cons,
                               final ArrayList<Distributor> distrs,
-                              final ArrayList<CalcConsumer> clcCons,
-                              final ArrayList<CalcDistributor> clcDistrs,
-                              final ArrayList<CalcConsumer> allCons,
-                              final ArrayList<CalcDistributor> allDistrs) {
-        if (cons == null && distrs == null) {
+                              final ArrayList<Producer> prods) {
+        if (cons == null && distrs == null && prods == null) {
             return null;
         }
 
-        if (distrs != null && cons == null) {
+        if (distrs != null && cons == null && prods != null) {
             return new DistributorFact();
-        } else if (distrs != null && cons != null) {
+        } else if (distrs != null && cons != null && prods != null) {
             return new ConsumerFact();
+        } else if (distrs == null && cons == null && prods != null) {
+            return new ProducerFact();
         }
 
         return null;

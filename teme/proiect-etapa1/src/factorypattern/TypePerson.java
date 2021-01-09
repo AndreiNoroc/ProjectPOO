@@ -2,8 +2,10 @@ package factorypattern;
 
 import consumer.Consumer;
 import distributor.Distributor;
+import producers.Producer;
 import transformdata.CalcConsumer;
 import transformdata.CalcDistributor;
+import transformdata.CalcProducer;
 
 import java.util.ArrayList;
 
@@ -17,7 +19,7 @@ public interface TypePerson {
      * @param allCons - lista tuturor consumatorilor
      * @param allDistrs - lista tuturor distribuitorilor
      */
-    void read(ArrayList<Consumer> cons, ArrayList<Distributor> distrs,
-              ArrayList<CalcConsumer> clcCons, ArrayList<CalcDistributor> clcDistrs,
-              ArrayList<CalcConsumer> allCons, ArrayList<CalcDistributor> allDistrs);
+    void read(ArrayList<Consumer> cons, ArrayList<Distributor> distrs, ArrayList<Producer> prods,
+              ArrayList<CalcConsumer> clcCons, ArrayList<CalcDistributor> clcDistrs, ArrayList<CalcProducer> clcProds,
+              ArrayList<CalcConsumer> allCons, ArrayList<CalcDistributor> allDistrs, ArrayList<CalcProducer> allProds);
 }

@@ -1,5 +1,8 @@
 package transformdata;
 
+import producers.Producer;
+import strategies.EnergyChoiceStrategyType;
+
 import java.util.ArrayList;
 
 public class CalcDistributor {
@@ -8,23 +11,30 @@ public class CalcDistributor {
     private int initialBudget;
     private int initialInfrastructureCost;
     private int initialProductionCost;
+    private int energyNeededKW;
+    private EnergyChoiceStrategyType producerStrategy;
     private int finalPrice;
     private ArrayList<CalcConsumer> clients;
     private boolean isBankrupt;
+    private ArrayList<CalcProducer> actualProd;
     private static double value = 0.2;
 
     public CalcDistributor(final int id, final int contractLength,
                            final int initialBudget,
                            final int initialInfrastructureCost,
-                           final int initialProductionCost) {
+                           final int energyNeededKW,
+                           final EnergyChoiceStrategyType producerStrategy) {
         this.id = id;
         this.contractLength = contractLength;
         this.initialBudget = initialBudget;
         this.initialInfrastructureCost = initialInfrastructureCost;
-        this.initialProductionCost = initialProductionCost;
+        this.energyNeededKW = energyNeededKW;
+        this.producerStrategy = producerStrategy;
         this.finalPrice = 0;
         this.clients = new ArrayList<>();
         this.isBankrupt = false;
+        this.actualProd = new ArrayList<>();
+        this.initialProductionCost = 0;
     }
 
     public final int getId() {
@@ -59,14 +69,6 @@ public class CalcDistributor {
         this.initialInfrastructureCost = initialInfrastructureCost;
     }
 
-    public final int getInitialProductionCost() {
-        return initialProductionCost;
-    }
-
-    public final void setInitialProductionCost(final int initialProductionCost) {
-        this.initialProductionCost = initialProductionCost;
-    }
-
     public final int getFinalPrice() {
         return finalPrice;
     }
@@ -91,23 +93,112 @@ public class CalcDistributor {
         this.isBankrupt = bankrupt;
     }
 
-    public static double getValue() {
+    public final int getEnergyNeededKW() {
+        return energyNeededKW;
+    }
+
+    public final void setEnergyNeededKW(final int energyNeededKW) {
+        this.energyNeededKW = energyNeededKW;
+    }
+
+    public final EnergyChoiceStrategyType getProducerStrategy() {
+        return producerStrategy;
+    }
+
+    public final void setProducerStrategy(final EnergyChoiceStrategyType producerStrategy) {
+        this.producerStrategy = producerStrategy;
+    }
+
+    public final int getInitialProductionCost() {
+        return initialProductionCost;
+    }
+
+    public final void setInitialProductionCost(final int initialProductionCost) {
+        this.initialProductionCost = initialProductionCost;
+    }
+
+    public final ArrayList<CalcProducer> getActualProd() {
+        return actualProd;
+    }
+
+    public final void setActualProd(final ArrayList<CalcProducer> actualProd) {
+        this.actualProd = actualProd;
+    }
+
+    public final static double getValue() {
         return value;
     }
 
-    public static void setValue(final double value) {
+    public final static void setValue(final double value) {
         CalcDistributor.value = value;
+    }
+
+    public final void chooseProducer(final ArrayList<CalcProducer> sortGreenProd,
+                                     final ArrayList<CalcProducer> sortPriceProd,
+                                     final ArrayList<CalcProducer> sortQuantityProd) {
+        int neededEnergy = this.energyNeededKW;
+
+        if (this.getProducerStrategy().toString().equals("GREEN")) {
+            double sum = 0;
+
+            for (CalcProducer cp : sortGreenProd) {
+                if (neededEnergy > 0) {
+                    this.actualProd.add(cp);
+                    cp.getClients().add(this);
+                    cp.getClientsId().add(this.id);
+                    neededEnergy -= cp.getEnergyPerDistributor();
+                    sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                } else {
+                    break;
+                }
+            }
+
+            this.initialProductionCost = (int) Math.round(Math.floor(sum / 10));
+        } else if (this.getProducerStrategy().toString().equals("PRICE")) {
+            double sum = 0;
+
+            for (CalcProducer cp : sortPriceProd) {
+                if (neededEnergy > 0) {
+                    this.actualProd.add(cp);
+                    cp.getClients().add(this);
+                    cp.getClientsId().add(this.id);
+                    neededEnergy -= cp.getEnergyPerDistributor();
+                    sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                } else {
+                    break;
+                }
+            }
+
+            this.initialProductionCost = (int) Math.round(Math.floor(sum / 10));
+        } else if (this.getProducerStrategy().toString().equals("QUANTITY")) {
+            double sum = 0;
+
+            for (CalcProducer cp : sortQuantityProd) {
+                if (neededEnergy > 0) {
+                    this.actualProd.add(cp);
+                    cp.getClients().add(this);
+                    cp.getClientsId().add(this.id);
+                    neededEnergy -= cp.getEnergyPerDistributor();
+                    sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                } else {
+                    break;
+                }
+            }
+
+            this.initialProductionCost = (int) Math.round(Math.floor(sum / 10));
+        }
     }
 
     /**
      * Metoda calculeaza pretul contractului
      */
     public final void setContractPrice() {
+
         if (this.clients.size() != 0) {
             int var = (int) Math.round(Math.floor(initialInfrastructureCost / clients.size()));
             this.finalPrice = var
-                    + initialProductionCost
-                    + (int) Math.round(Math.floor(value * initialProductionCost));
+                    + this.initialProductionCost
+                    + (int) Math.round(Math.floor(value * this.initialProductionCost));
         } else {
             this.finalPrice = this.initialInfrastructureCost
                     + this.initialProductionCost
@@ -155,13 +246,25 @@ public class CalcDistributor {
                 +
                 initialInfrastructureCost
                 +
-                ", initialProductionCost="
+                ", energyNeededKW="
                 +
-                initialProductionCost
+                energyNeededKW
+                +
+                ", producerStrategy="
+                +
+                producerStrategy
                 +
                 ", finalPrice="
                 +
                 finalPrice
+                +
+                ", clients="
+                +
+                clients
+                +
+                ", isBankrupt="
+                +
+                isBankrupt
                 +
                 '}';
     }

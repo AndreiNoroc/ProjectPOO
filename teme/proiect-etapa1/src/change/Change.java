@@ -3,14 +3,12 @@ package change;
 public class Change {
     private int id;
     private int infrastructureCost;
-    private int productionCost;
 
     public Change() { }
 
-    public Change(final int id, final int infrastructureCost, final int productionCost) {
+    public Change(final int id, final int infrastructureCost) {
         this.id = id;
         this.infrastructureCost = infrastructureCost;
-        this.productionCost = productionCost;
     }
 
     public final int getId() {
@@ -29,14 +27,6 @@ public class Change {
         this.infrastructureCost = infrastructureCost;
     }
 
-    public final int getProductionCost() {
-        return productionCost;
-    }
-
-    public final void setProductionCost(final int productionCost) {
-        this.productionCost = productionCost;
-    }
-
     @Override
     public final String toString() {
         return "costChange{"
@@ -48,10 +38,6 @@ public class Change {
                 ", infrastructureCost="
                 +
                 infrastructureCost
-                +
-                ", productionCost="
-                +
-                productionCost
                 +
                 '}';
     }
