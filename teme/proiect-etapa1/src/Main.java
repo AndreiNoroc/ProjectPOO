@@ -106,17 +106,44 @@ public final class Main {
                 }
             }
 
+            boolean ok = false;
+
             ArrayList<ProducerChange> prodChanges = u.getProducerChanges();
             if (prodChanges.size() != 0) {
                 for (ProducerChange p : prodChanges) {
                     for (CalcProducer cp : producers) {
                         if (p.getId() == cp.getId()) {
                             cp.setEnergyPerDistributor(p.getEnergyPerDistributor());
+
+                            ok = true;
+
+                            ArrayList<CalcDistributor> deleteDistr = new ArrayList<>();
+
+                            for (CalcDistributor cd : cp.getClients()) {
+                                for (CalcProducer cpaux : cd.getActualProd()) {
+                                    if (!cpaux.equals(cp)) {
+                                        cpaux.getClientsId().remove(cd.getId());
+                                        cpaux.getClients().remove(cd);
+                                    }
+                                }
+
+                                deleteDistr.add(cd);
+                                cd.getActualProd().clear();
+                            }
+
+                            for (CalcDistributor cd : deleteDistr) {
+                                cp.getClientsId().remove(cd.getId());
+                                cp.getClients().remove(cd);
+                            }
+
+                            deleteDistr.clear();
                         }
                     }
+
+
+
                 }
             }
-
 
             ArrayList<Change> changes = u.getDistributorChanges();
             if (changes.size() != 0) {
@@ -129,10 +156,18 @@ public final class Main {
                 }
             }
 
-            for (CalcDistributor cd : distributors) {
-                cd.setContractPrice();
+            if (ok) {
+                sortGreenProd.sort(Main::compareGreen);//ezf
+                sortPriceProd.sort(Main::comparePrice);//zfez
+                sortQuantityProd.sort(Main::compareQuantity);//Zfez
             }
 
+            for (CalcDistributor cd : distributors) {
+                if (cd.getActualProd().size() == 0) {
+                    cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);//zfze
+                }
+                cd.setContractPrice();
+            }
 
             distributors.sort(Main::compare);
 
@@ -256,51 +291,45 @@ public final class Main {
         return c1.getFinalPrice() - c2.getFinalPrice();
     }
 
-    private static int compareGreen(final CalcProducer p1, final CalcProducer p2) {
-        if (!p1.getEnergyType().isRenewable() && p2.getEnergyType().isRenewable()) {
-            return 1;
-        } else if (p1.getEnergyType().isRenewable() && p2.getEnergyType().isRenewable()) {
-            if (p1.getPriceKW() > p2.getPriceKW()) {
-                return 1;
-            } else if (p1.getPriceKW() == p2.getPriceKW()) {
-                if (p1.getEnergyPerDistributor() > p2.getEnergyPerDistributor()) {
-                    return 1;
-                } else if (p1.getEnergyPerDistributor() == p2.getEnergyPerDistributor()) {
-                    if (p1.getId() > p2.getId()) {
-                        return 1;
-                    }
-                }
-            }
+    private static int compareGreen(final CalcProducer cp1, final CalcProducer cp2) {
+        int cmp = Boolean.compare(cp2.getEnergyType().isRenewable(), cp1.getEnergyType().isRenewable());
+
+        if (cmp == 0) {
+            cmp = Double.compare(cp1.getPriceKW(), cp2.getPriceKW());
         }
 
-        return -1;
+        if (cmp == 0) {
+            cmp = Integer.compare(cp2.getEnergyPerDistributor(), cp1.getEnergyPerDistributor());
+        }
+
+        if (cmp == 0) {
+            cmp = Integer.compare(cp1.getId(), cp2.getId());
+        }
+
+        return cmp;
     }
 
-    private static int comparePrice(final CalcProducer p1, final CalcProducer p2) {
-        if (p1.getPriceKW() > p2.getPriceKW()) {
-            return 1;
-        } else if (p1.getPriceKW() == p2.getPriceKW()) {
-            if (p1.getEnergyPerDistributor() > p2.getEnergyPerDistributor()) {
-                return 1;
-            } else if (p1.getEnergyPerDistributor() == p2.getEnergyPerDistributor()) {
-                if (p1.getId() > p2.getId()) {
-                    return 1;
-                }
-            }
+    private static int comparePrice(final CalcProducer cp1, final CalcProducer cp2) {
+        int cmp = Double.compare(cp1.getPriceKW(), cp2.getPriceKW());
+
+        if (cmp == 0) {
+            cmp = Integer.compare(cp2.getEnergyPerDistributor(), cp1.getEnergyPerDistributor());
         }
 
-        return -1;
+        if (cmp == 0) {
+            cmp = Integer.compare(cp1.getId(), cp2.getId());
+        }
+
+        return cmp;
     }
 
-    private static int compareQuantity(final CalcProducer p1, final CalcProducer p2) {
-        if (p1.getEnergyPerDistributor() > p2.getEnergyPerDistributor()) {
-            return 1;
-        } else if (p1.getEnergyPerDistributor() == p2.getEnergyPerDistributor()) {
-            if (p1.getId() > p2.getId()) {
-                return 1;
-            }
+    private static int compareQuantity(final CalcProducer cp1, final CalcProducer cp2) {
+        int cmp = Integer.compare(cp2.getEnergyPerDistributor(), cp1.getEnergyPerDistributor());
+
+        if (cmp == 0) {
+            cmp = Integer.compare(cp1.getId(), cp2.getId());
         }
 
-        return -1;
+        return cmp;
     }
 }
