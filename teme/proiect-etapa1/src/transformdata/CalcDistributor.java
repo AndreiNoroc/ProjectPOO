@@ -1,6 +1,5 @@
 package transformdata;
 
-import producers.Producer;
 import strategies.EnergyChoiceStrategyType;
 
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ public class CalcDistributor {
     private boolean isBankrupt;
     private ArrayList<CalcProducer> actualProd;
     private static double value = 0.2;
+    private static int val1 = 10;
 
     public CalcDistributor(final int id, final int contractLength,
                            final int initialBudget,
@@ -125,14 +125,20 @@ public class CalcDistributor {
         this.actualProd = actualProd;
     }
 
-    public final static double getValue() {
+    public static double getValue() {
         return value;
     }
 
-    public final static void setValue(final double value) {
+    public static void setValue(final double value) {
         CalcDistributor.value = value;
     }
 
+    /**
+     * Functia alege producatorii unui distribuitor
+     * @param sortGreenProd - producatorii sortati dupa criteriul green
+     * @param sortPriceProd - producatorii sortati dupa criteriul price
+     * @param sortQuantityProd - producatorii sortati dupa criteriul quantity
+     */
     public final void chooseProducer(final ArrayList<CalcProducer> sortGreenProd,
                                      final ArrayList<CalcProducer> sortPriceProd,
                                      final ArrayList<CalcProducer> sortQuantityProd) {
@@ -140,9 +146,8 @@ public class CalcDistributor {
 
         if (this.getProducerStrategy().toString().equals("GREEN")) {
             double sum = 0;
-
             for (CalcProducer cp : sortGreenProd) {
-                if (neededEnergy > 0) {
+                if (neededEnergy > 0 && cp.getClients().size() < cp.getMaxDistributors()) {
                     this.actualProd.add(cp);
                     cp.getClients().add(this);
                     cp.getClientsId().add(this.id);
@@ -153,12 +158,12 @@ public class CalcDistributor {
                 }
             }
 
-            this.initialProductionCost = (int) Math.round(Math.floor(sum / 10));
+            this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
         } else if (this.getProducerStrategy().toString().equals("PRICE")) {
             double sum = 0;
 
             for (CalcProducer cp : sortPriceProd) {
-                if (neededEnergy > 0) {
+                if (neededEnergy > 0 && cp.getClients().size() < cp.getMaxDistributors()) {
                     this.actualProd.add(cp);
                     cp.getClients().add(this);
                     cp.getClientsId().add(this.id);
@@ -169,12 +174,12 @@ public class CalcDistributor {
                 }
             }
 
-            this.initialProductionCost = (int) Math.round(Math.floor(sum / 10));
+            this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
         } else if (this.getProducerStrategy().toString().equals("QUANTITY")) {
             double sum = 0;
 
             for (CalcProducer cp : sortQuantityProd) {
-                if (neededEnergy > 0) {
+                if (neededEnergy > 0 && cp.getClients().size() < cp.getMaxDistributors()) {
                     this.actualProd.add(cp);
                     cp.getClients().add(this);
                     cp.getClientsId().add(this.id);
@@ -185,7 +190,7 @@ public class CalcDistributor {
                 }
             }
 
-            this.initialProductionCost = (int) Math.round(Math.floor(sum / 10));
+            this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
         }
     }
 

@@ -76,7 +76,7 @@ public class OutProducer {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "OutProducer{"
                 +
                 "id="

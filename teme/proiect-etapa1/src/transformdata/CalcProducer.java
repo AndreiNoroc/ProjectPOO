@@ -76,24 +76,29 @@ public class CalcProducer {
         this.clients = clients;
     }
 
-    public ArrayList<Integer> getClientsId() {
+    public final ArrayList<Integer> getClientsId() {
         return clientsId;
     }
 
-    public void setClientsId(ArrayList<Integer> clientsId) {
+    public final void setClientsId(final ArrayList<Integer> clientsId) {
         this.clientsId = clientsId;
     }
 
-    public ArrayList<MonthlyStat> getMs() {
+    public final ArrayList<MonthlyStat> getMs() {
         return ms;
     }
 
-    public void setMs(ArrayList<MonthlyStat> ms) {
+    public final void setMs(final ArrayList<MonthlyStat> ms) {
         this.ms = ms;
     }
 
-    public void makeMonthStat(int month) {
-        MonthlyStat mStat = new MonthlyStat(month, this.clientsId);
+    /**
+     * Metoda retine situatia lunara a
+     * clientilor unui producator
+     * @param month - luna actuala
+     */
+    public final void makeMonthStat(int month) {
+        MonthlyStat mStat = new MonthlyStat(month, new ArrayList(this.clientsId));
         this.ms.add(mStat);
     }
 
@@ -124,6 +129,14 @@ public class CalcProducer {
                 ", clients="
                 +
                 clients
+                +
+                ", clientsId="
+                +
+                clientsId
+                +
+                ", ms="
+                +
+                ms
                 +
                 '}';
     }

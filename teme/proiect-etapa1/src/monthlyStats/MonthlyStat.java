@@ -29,9 +29,16 @@ public class MonthlyStat {
 
     @Override
     public final String toString() {
-        return "MonthlyStat{" +
-                "month=" + month +
-                ", distributorsIds=" + distributorsIds +
+        return "MonthlyStat{"
+                +
+                "month="
+                +
+                month
+                +
+                ", distributorsIds="
+                +
+                distributorsIds
+                +
                 '}';
     }
 }

@@ -29,9 +29,16 @@ public class ProducerChange {
 
     @Override
     public final String toString() {
-        return "ProducerChange{" +
-                "id=" + id +
-                ", energyPerDistributor=" + energyPerDistributor +
+        return "ProducerChange{"
+                +
+                "id="
+                +
+                id
+                +
+                ", energyPerDistributor="
+                +
+                energyPerDistributor
+                +
                 '}';
     }
 }

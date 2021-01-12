@@ -61,8 +61,8 @@ public final class Main {
         TypePerson type1 = typeFactory.getType(null, initsDistributor, initsProducer);
 
         type1.read(null, initsDistributor, null,
-                null, distributors , null,
-                null, outDistributors,null);
+                null, distributors, null,
+                null, outDistributors, null);
 
         for (CalcDistributor cd:distributors) {
             cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
@@ -93,8 +93,14 @@ public final class Main {
 
         int len = 0;
 
+        System.out.println(consumers);
+        System.out.println(distributors);
+        System.out.println(producers);
+
         for (MonthlyUpdate u : updates) {
             len++;
+
+            System.out.println("LEN:" + len);
 
             ArrayList<Consumer> newConsumers = u.getNewConsumers();
             if (newConsumers.size() != 0) {
@@ -117,8 +123,6 @@ public final class Main {
 
                             ok = true;
 
-                            ArrayList<CalcDistributor> deleteDistr = new ArrayList<>();
-
                             for (CalcDistributor cd : cp.getClients()) {
                                 for (CalcProducer cpaux : cd.getActualProd()) {
                                     if (!cpaux.equals(cp)) {
@@ -127,23 +131,17 @@ public final class Main {
                                     }
                                 }
 
-                                deleteDistr.add(cd);
                                 cd.getActualProd().clear();
                             }
 
-                            for (CalcDistributor cd : deleteDistr) {
-                                cp.getClientsId().remove(cd.getId());
-                                cp.getClients().remove(cd);
-                            }
-
-                            deleteDistr.clear();
+                            cp.getClientsId().clear();
+                            cp.getClients().clear();
                         }
                     }
-
-
-
                 }
             }
+
+            System.out.println(producers);
 
             ArrayList<Change> changes = u.getDistributorChanges();
             if (changes.size() != 0) {
@@ -157,20 +155,19 @@ public final class Main {
             }
 
             if (ok) {
-                sortGreenProd.sort(Main::compareGreen);//ezf
-                sortPriceProd.sort(Main::comparePrice);//zfez
-                sortQuantityProd.sort(Main::compareQuantity);//Zfez
+                sortGreenProd.sort(Main::compareGreen);
+                sortPriceProd.sort(Main::comparePrice);
+                sortQuantityProd.sort(Main::compareQuantity);
             }
 
             for (CalcDistributor cd : distributors) {
-                if (cd.getActualProd().size() == 0) {
-                    cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);//zfze
+                if (ok && cd.getActualProd().size() == 0) {
+                    cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
                 }
                 cd.setContractPrice();
             }
 
             distributors.sort(Main::compare);
-
 
             for (CalcConsumer cc : consumers) {
                 if (cc.getPriceDistr() != 0) {
@@ -239,6 +236,10 @@ public final class Main {
             for (CalcProducer cp : producers) {
                 cp.makeMonthStat(len);
             }
+
+            System.out.println(consumers);
+            System.out.println(distributors);
+            System.out.println(producers);
         }
 
         ArrayList<OutConsumer> lastConsumers = new ArrayList<>();
@@ -267,7 +268,9 @@ public final class Main {
 
         ArrayList<OutProducer> lastProducers = new ArrayList<>();
         for (CalcProducer cp : outProducers) {
-            OutProducer producer = new OutProducer(cp.getId(), cp.getMaxDistributors(), cp.getPriceKW(), cp.getEnergyType(), cp.getEnergyPerDistributor(), cp.getMs());
+            OutProducer producer = new OutProducer(cp.getId(), cp.getMaxDistributors(),
+                    cp.getPriceKW(), cp.getEnergyType(),
+                    cp.getEnergyPerDistributor(), cp.getMs());
             lastProducers.add(producer);
         }
 
@@ -292,7 +295,8 @@ public final class Main {
     }
 
     private static int compareGreen(final CalcProducer cp1, final CalcProducer cp2) {
-        int cmp = Boolean.compare(cp2.getEnergyType().isRenewable(), cp1.getEnergyType().isRenewable());
+        int cmp = Boolean.compare(cp2.getEnergyType().isRenewable(),
+                cp1.getEnergyType().isRenewable());
 
         if (cmp == 0) {
             cmp = Double.compare(cp1.getPriceKW(), cp2.getPriceKW());

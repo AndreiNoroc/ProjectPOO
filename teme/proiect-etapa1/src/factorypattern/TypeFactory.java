@@ -3,9 +3,6 @@ package factorypattern;
 import consumer.Consumer;
 import distributor.Distributor;
 import producers.Producer;
-import transformdata.CalcConsumer;
-import transformdata.CalcDistributor;
-import transformdata.CalcProducer;
 
 import java.util.ArrayList;
 

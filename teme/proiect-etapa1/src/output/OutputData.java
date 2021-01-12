@@ -13,7 +13,9 @@ public class OutputData {
 
     public OutputData() { }
 
-    public OutputData(final ArrayList<OutConsumer> consumers, final ArrayList<OutDistributor> distributors, final ArrayList<OutProducer> energyProducers) {
+    public OutputData(final ArrayList<OutConsumer> consumers,
+                      final ArrayList<OutDistributor> distributors,
+                      final ArrayList<OutProducer> energyProducers) {
         this.consumers = consumers;
         this.distributors = distributors;
         this.energyProducers = energyProducers;
@@ -44,7 +46,7 @@ public class OutputData {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "OutputData{"
                 +
                 "consumers="

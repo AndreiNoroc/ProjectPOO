@@ -1,7 +1,6 @@
 package distributor;
 
 import contract.Contract;
-import entities.EnergyType;
 import strategies.EnergyChoiceStrategyType;
 
 import java.util.ArrayList;

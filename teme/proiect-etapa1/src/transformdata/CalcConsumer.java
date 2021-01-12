@@ -143,16 +143,22 @@ public class CalcConsumer {
         } else {
             int var1 = (int) Math.round(Math.floor(value * this.priceOldDistr));
 
-            if (this.initialBudget - (var1 + this.priceDistr) < 0) {
-                this.isBankrupt = true;
+            if (actualDistr.equals(oldDistr)) {
+                if (this.initialBudget - (var1 + this.priceDistr) < 0) {
+                    this.isBankrupt = true;
+                } else {
+                    this.initialBudget -= (var1 + this.priceDistr);
+                    actualDistr.addPayConsumer(this.priceDistr + var1);
+                    this.preBankrupt = false;
+                }
             } else {
-                int var = (int) Math.round(Math.floor(value * this.priceOldDistr));
-                this.initialBudget -= var + this.priceDistr;
-
-                actualDistr.addPayConsumer(this.priceDistr);
-                oldDistr.addPayConsumer((int) Math.round(Math.floor(value * this.priceOldDistr)));
-
-                this.preBankrupt = false;
+                if (this.initialBudget - var1 < 0) {
+                    this.isBankrupt = true;
+                } else {
+                    this.initialBudget -= var1;
+                    oldDistr.addPayConsumer(var1);
+                    this.preBankrupt = false;
+                }
             }
         }
     }

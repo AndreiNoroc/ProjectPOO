@@ -19,7 +19,10 @@ public interface TypePerson {
      * @param allCons - lista tuturor consumatorilor
      * @param allDistrs - lista tuturor distribuitorilor
      */
-    void read(ArrayList<Consumer> cons, ArrayList<Distributor> distrs, ArrayList<Producer> prods,
-              ArrayList<CalcConsumer> clcCons, ArrayList<CalcDistributor> clcDistrs, ArrayList<CalcProducer> clcProds,
-              ArrayList<CalcConsumer> allCons, ArrayList<CalcDistributor> allDistrs, ArrayList<CalcProducer> allProds);
+    void read(ArrayList<Consumer> cons, ArrayList<Distributor> distrs,
+              ArrayList<Producer> prods,
+              ArrayList<CalcConsumer> clcCons, ArrayList<CalcDistributor> clcDistrs,
+              ArrayList<CalcProducer> clcProds,
+              ArrayList<CalcConsumer> allCons, ArrayList<CalcDistributor> allDistrs,
+              ArrayList<CalcProducer> allProds);
 }
