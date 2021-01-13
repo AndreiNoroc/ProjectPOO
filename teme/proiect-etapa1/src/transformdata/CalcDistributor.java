@@ -205,6 +205,7 @@ public class CalcDistributor {
                     + this.initialProductionCost
                     + (int) Math.round(Math.floor(value * this.initialProductionCost));
         } else {
+            System.out.println(this.initialProductionCost + " " + this.initialInfrastructureCost + " " + (int) Math.round(Math.floor(value * this.initialProductionCost)));
             this.finalPrice = this.initialInfrastructureCost
                     + this.initialProductionCost
                     + (int) Math.round(Math.floor(value * this.initialProductionCost));

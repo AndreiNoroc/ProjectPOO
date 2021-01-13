@@ -4,6 +4,7 @@ import entities.EnergyType;
 import monthlyStats.MonthlyStat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CalcProducer {
     private int id;
@@ -98,6 +99,7 @@ public class CalcProducer {
      * @param month - luna actuala
      */
     public final void makeMonthStat(int month) {
+        Collections.sort(this.clientsId);
         MonthlyStat mStat = new MonthlyStat(month, new ArrayList(this.clientsId));
         this.ms.add(mStat);
     }

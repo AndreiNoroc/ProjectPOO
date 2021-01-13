@@ -99,7 +99,6 @@ public final class Main {
 
         for (MonthlyUpdate u : updates) {
             len++;
-
             System.out.println("LEN:" + len);
 
             ArrayList<Consumer> newConsumers = u.getNewConsumers();
@@ -112,37 +111,6 @@ public final class Main {
                 }
             }
 
-            boolean ok = false;
-
-            ArrayList<ProducerChange> prodChanges = u.getProducerChanges();
-            if (prodChanges.size() != 0) {
-                for (ProducerChange p : prodChanges) {
-                    for (CalcProducer cp : producers) {
-                        if (p.getId() == cp.getId()) {
-                            cp.setEnergyPerDistributor(p.getEnergyPerDistributor());
-
-                            ok = true;
-
-                            for (CalcDistributor cd : cp.getClients()) {
-                                for (CalcProducer cpaux : cd.getActualProd()) {
-                                    if (!cpaux.equals(cp)) {
-                                        cpaux.getClientsId().remove(cd.getId());
-                                        cpaux.getClients().remove(cd);
-                                    }
-                                }
-
-                                cd.getActualProd().clear();
-                            }
-
-                            cp.getClientsId().clear();
-                            cp.getClients().clear();
-                        }
-                    }
-                }
-            }
-
-            System.out.println(producers);
-
             ArrayList<Change> changes = u.getDistributorChanges();
             if (changes.size() != 0) {
                 for (Change ch : changes) {
@@ -154,17 +122,21 @@ public final class Main {
                 }
             }
 
-            if (ok) {
-                sortGreenProd.sort(Main::compareGreen);
-                sortPriceProd.sort(Main::comparePrice);
-                sortQuantityProd.sort(Main::compareQuantity);
-            }
+            sortGreenProd.sort(Main::compareGreen);
+            sortPriceProd.sort(Main::comparePrice);
+            sortQuantityProd.sort(Main::compareQuantity);
 
             for (CalcDistributor cd : distributors) {
-                if (ok && cd.getActualProd().size() == 0) {
+                if (cd.getActualProd().size() == 0 && len > 1) {
                     cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
                 }
                 cd.setContractPrice();
+            }
+
+            if (len > 1) {
+                for (CalcProducer cp : producers) {
+                    cp.makeMonthStat(len - 1);
+                }
             }
 
             distributors.sort(Main::compare);
@@ -210,6 +182,31 @@ public final class Main {
                 }
             }
 
+            ArrayList<ProducerChange> prodChanges = u.getProducerChanges();
+            if (prodChanges.size() != 0) {
+                for (ProducerChange p : prodChanges) {
+                    for (CalcProducer cp : producers) {
+                        if (p.getId() == cp.getId()) {
+                            cp.setEnergyPerDistributor(p.getEnergyPerDistributor());
+
+                            for (CalcDistributor cd : cp.getClients()) {
+                                for (CalcProducer cpaux : cd.getActualProd()) {
+                                    if (!cpaux.equals(cp)) {
+                                        cpaux.getClientsId().remove(cd.getId());
+                                        cpaux.getClients().remove(cd);
+                                    }
+                                }
+
+                                cd.getActualProd().clear();
+                            }
+
+                            cp.getClientsId().clear();
+                            cp.getClients().clear();
+                        }
+                    }
+                }
+            }
+
             if (rmvConsumer.size() != 0) {
                 for (CalcConsumer cc : rmvConsumer) {
                     cc.getActualDistr().getClients().remove(cc);
@@ -233,14 +230,25 @@ public final class Main {
                 rmvDistributor.clear();
             }
 
-            for (CalcProducer cp : producers) {
-                cp.makeMonthStat(len);
-            }
-
             System.out.println(consumers);
             System.out.println(distributors);
             System.out.println(producers);
         }
+
+        sortGreenProd.sort(Main::compareGreen);
+        sortPriceProd.sort(Main::comparePrice);
+        sortQuantityProd.sort(Main::compareQuantity);
+
+        for (CalcDistributor cd : distributors) {
+            if (cd.getActualProd().size() == 0) {
+                cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
+            }
+        }
+
+        for (CalcProducer cp : producers) {
+            cp.makeMonthStat(len);
+        }
+
 
         ArrayList<OutConsumer> lastConsumers = new ArrayList<>();
         for (CalcConsumer cc : outConsumer) {
