@@ -2,9 +2,7 @@ Starting audit...
 [ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcConsumer.java:14:35: '1.2' is a magic number. [MagicNumber]
 [ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcDistributor.java:19:35: '0.2' is a magic number. [MagicNumber]
 [ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcDistributor.java:20:31: '10' is a magic number. [MagicNumber]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/transformdata/CalcDistributor.java:208: Line is longer than 100 characters (found 171). [LineLength]
 [ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/strategies/EnergyChoiceStrategyType.java:10:25: Variable 'label' must be private and have accessor methods. [VisibilityModifier]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/Main.java:32:5: Method length is 262 lines (max allowed is 150). [MethodLength]
-[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/monthlyStats/MonthlyStat.java:1:9: Name 'monthlyStats' must match pattern '^[a-z]+(\.[a-zA-Z_][a-zA-Z0-9_]*)*$'. [PackageName]
+[ERROR] /home/andrei/Desktop/POO/ProjectPOO/teme/proiect-etapa1/./src/Main.java:32:5: Method length is 257 lines (max allowed is 150). [MethodLength]
 Audit done.
-Checkstyle ends with 7 errors.
+Checkstyle ends with 5 errors.

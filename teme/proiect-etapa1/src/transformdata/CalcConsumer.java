@@ -142,7 +142,6 @@ public class CalcConsumer {
             }
         } else {
             int var1 = (int) Math.round(Math.floor(value * this.priceOldDistr));
-
             if (actualDistr.equals(oldDistr)) {
                 if (this.initialBudget - (var1 + this.priceDistr) < 0) {
                     this.isBankrupt = true;

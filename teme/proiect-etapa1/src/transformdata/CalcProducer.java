@@ -1,7 +1,7 @@
 package transformdata;
 
 import entities.EnergyType;
-import monthlyStats.MonthlyStat;
+import monthlystats.MonthlyStat;
 
 import java.util.ArrayList;
 import java.util.Collections;

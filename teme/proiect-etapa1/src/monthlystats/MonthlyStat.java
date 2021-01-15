@@ -1,4 +1,4 @@
-package monthlyStats;
+package monthlystats;
 
 import java.util.ArrayList;
 

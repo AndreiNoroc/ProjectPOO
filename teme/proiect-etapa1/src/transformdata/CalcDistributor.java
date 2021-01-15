@@ -143,16 +143,18 @@ public class CalcDistributor {
                                      final ArrayList<CalcProducer> sortPriceProd,
                                      final ArrayList<CalcProducer> sortQuantityProd) {
         int neededEnergy = this.energyNeededKW;
+        double sum = 0;
 
         if (this.getProducerStrategy().toString().equals("GREEN")) {
-            double sum = 0;
             for (CalcProducer cp : sortGreenProd) {
-                if (neededEnergy > 0 && cp.getClients().size() < cp.getMaxDistributors()) {
-                    this.actualProd.add(cp);
-                    cp.getClients().add(this);
-                    cp.getClientsId().add(this.id);
-                    neededEnergy -= cp.getEnergyPerDistributor();
-                    sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                if (neededEnergy > 0) {
+                    if (cp.getClients().size() < cp.getMaxDistributors()) {
+                        this.actualProd.add(cp);
+                        cp.getClients().add(this);
+                        cp.getClientsId().add(this.id);
+                        neededEnergy -= cp.getEnergyPerDistributor();
+                        sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                    }
                 } else {
                     break;
                 }
@@ -160,15 +162,15 @@ public class CalcDistributor {
 
             this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
         } else if (this.getProducerStrategy().toString().equals("PRICE")) {
-            double sum = 0;
-
             for (CalcProducer cp : sortPriceProd) {
-                if (neededEnergy > 0 && cp.getClients().size() < cp.getMaxDistributors()) {
-                    this.actualProd.add(cp);
-                    cp.getClients().add(this);
-                    cp.getClientsId().add(this.id);
-                    neededEnergy -= cp.getEnergyPerDistributor();
-                    sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                if (neededEnergy > 0) {
+                    if (cp.getClients().size() < cp.getMaxDistributors()) {
+                        this.actualProd.add(cp);
+                        cp.getClients().add(this);
+                        cp.getClientsId().add(this.id);
+                        neededEnergy -= cp.getEnergyPerDistributor();
+                        sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                    }
                 } else {
                     break;
                 }
@@ -176,15 +178,16 @@ public class CalcDistributor {
 
             this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
         } else if (this.getProducerStrategy().toString().equals("QUANTITY")) {
-            double sum = 0;
 
             for (CalcProducer cp : sortQuantityProd) {
-                if (neededEnergy > 0 && cp.getClients().size() < cp.getMaxDistributors()) {
-                    this.actualProd.add(cp);
-                    cp.getClients().add(this);
-                    cp.getClientsId().add(this.id);
-                    neededEnergy -= cp.getEnergyPerDistributor();
-                    sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                if (neededEnergy > 0) {
+                    if (cp.getClients().size() < cp.getMaxDistributors()) {
+                        this.actualProd.add(cp);
+                        cp.getClients().add(this);
+                        cp.getClientsId().add(this.id);
+                        neededEnergy -= cp.getEnergyPerDistributor();
+                        sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
+                    }
                 } else {
                     break;
                 }
@@ -205,7 +208,6 @@ public class CalcDistributor {
                     + this.initialProductionCost
                     + (int) Math.round(Math.floor(value * this.initialProductionCost));
         } else {
-            System.out.println(this.initialProductionCost + " " + this.initialInfrastructureCost + " " + (int) Math.round(Math.floor(value * this.initialProductionCost)));
             this.finalPrice = this.initialInfrastructureCost
                     + this.initialProductionCost
                     + (int) Math.round(Math.floor(value * this.initialProductionCost));

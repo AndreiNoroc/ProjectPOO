@@ -93,13 +93,10 @@ public final class Main {
 
         int len = 0;
 
-        System.out.println(consumers);
-        System.out.println(distributors);
-        System.out.println(producers);
+        ArrayList<CalcDistributor> retainChProd = new ArrayList<>();
 
         for (MonthlyUpdate u : updates) {
             len++;
-            System.out.println("LEN:" + len);
 
             ArrayList<Consumer> newConsumers = u.getNewConsumers();
             if (newConsumers.size() != 0) {
@@ -126,10 +123,22 @@ public final class Main {
             sortPriceProd.sort(Main::comparePrice);
             sortQuantityProd.sort(Main::compareQuantity);
 
-            for (CalcDistributor cd : distributors) {
-                if (cd.getActualProd().size() == 0 && len > 1) {
-                    cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
+            retainChProd.sort(Comparator.comparingInt(CalcDistributor::getId));
+
+            for (CalcDistributor cd : retainChProd) {
+                for (CalcProducer cp : cd.getActualProd()) {
+                        Integer no = cd.getId();
+                        cp.getClientsId().remove(no);
+                        cp.getClients().remove(cd);
                 }
+                cd.getActualProd().clear();
+
+                cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
+            }
+
+            retainChProd.clear();
+
+            for (CalcDistributor cd : distributors) {
                 cd.setContractPrice();
             }
 
@@ -188,20 +197,7 @@ public final class Main {
                     for (CalcProducer cp : producers) {
                         if (p.getId() == cp.getId()) {
                             cp.setEnergyPerDistributor(p.getEnergyPerDistributor());
-
-                            for (CalcDistributor cd : cp.getClients()) {
-                                for (CalcProducer cpaux : cd.getActualProd()) {
-                                    if (!cpaux.equals(cp)) {
-                                        cpaux.getClientsId().remove(cd.getId());
-                                        cpaux.getClients().remove(cd);
-                                    }
-                                }
-
-                                cd.getActualProd().clear();
-                            }
-
-                            cp.getClientsId().clear();
-                            cp.getClients().clear();
+                            retainChProd.addAll(cp.getClients());
                         }
                     }
                 }
@@ -229,26 +225,26 @@ public final class Main {
 
                 rmvDistributor.clear();
             }
-
-            System.out.println(consumers);
-            System.out.println(distributors);
-            System.out.println(producers);
         }
 
         sortGreenProd.sort(Main::compareGreen);
         sortPriceProd.sort(Main::comparePrice);
         sortQuantityProd.sort(Main::compareQuantity);
 
-        for (CalcDistributor cd : distributors) {
-            if (cd.getActualProd().size() == 0) {
-                cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
+        for (CalcDistributor cd : retainChProd) {
+            for (CalcProducer cp : cd.getActualProd()) {
+                Integer no = cd.getId();
+                cp.getClientsId().remove(no);
+                cp.getClients().remove(cd);
             }
+            cd.getActualProd().clear();
+
+            cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
         }
 
         for (CalcProducer cp : producers) {
             cp.makeMonthStat(len);
         }
-
 
         ArrayList<OutConsumer> lastConsumers = new ArrayList<>();
         for (CalcConsumer cc : outConsumer) {
@@ -272,6 +268,7 @@ public final class Main {
                     cd.getInitialBudget(), cd.getProducerStrategy(), cd.isBankrupt(), contracts);
             lastDistributors.add(distributor);
         }
+
         lastDistributors.sort(Comparator.comparingInt(OutDistributor::getId));
 
         ArrayList<OutProducer> lastProducers = new ArrayList<>();
@@ -286,8 +283,6 @@ public final class Main {
         output.setConsumers(lastConsumers);
         output.setDistributors(lastDistributors);
         output.setEnergyProducers(lastProducers);
-
-        System.out.println(output);
 
         obMap.writerWithDefaultPrettyPrinter().writeValue(new File(args[1]), output);
     }

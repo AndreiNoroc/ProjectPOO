@@ -1,7 +1,7 @@
 package producers;
 
 import entities.EnergyType;
-import monthlyStats.MonthlyStat;
+import monthlystats.MonthlyStat;
 
 import java.util.ArrayList;
 
