@@ -1,6 +1,10 @@
 package transformdata;
 
 import strategies.EnergyChoiceStrategyType;
+import strategypattern.Context;
+import strategypattern.StrategyGreen;
+import strategypattern.StrategyPrice;
+import strategypattern.StrategyQuantity;
 
 import java.util.ArrayList;
 
@@ -142,58 +146,15 @@ public class CalcDistributor {
     public final void chooseProducer(final ArrayList<CalcProducer> sortGreenProd,
                                      final ArrayList<CalcProducer> sortPriceProd,
                                      final ArrayList<CalcProducer> sortQuantityProd) {
-        int neededEnergy = this.energyNeededKW;
-        double sum = 0;
-
         if (this.getProducerStrategy().toString().equals("GREEN")) {
-            for (CalcProducer cp : sortGreenProd) {
-                if (neededEnergy > 0) {
-                    if (cp.getClients().size() < cp.getMaxDistributors()) {
-                        this.actualProd.add(cp);
-                        cp.getClients().add(this);
-                        cp.getClientsId().add(this.id);
-                        neededEnergy -= cp.getEnergyPerDistributor();
-                        sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
-                    }
-                } else {
-                    break;
-                }
-            }
-
-            this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
+            Context context = new Context(new StrategyGreen());
+            context.executeStrategy(sortGreenProd, this);
         } else if (this.getProducerStrategy().toString().equals("PRICE")) {
-            for (CalcProducer cp : sortPriceProd) {
-                if (neededEnergy > 0) {
-                    if (cp.getClients().size() < cp.getMaxDistributors()) {
-                        this.actualProd.add(cp);
-                        cp.getClients().add(this);
-                        cp.getClientsId().add(this.id);
-                        neededEnergy -= cp.getEnergyPerDistributor();
-                        sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
-                    }
-                } else {
-                    break;
-                }
-            }
-
-            this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
+            Context context = new Context(new StrategyPrice());
+            context.executeStrategy(sortPriceProd, this);
         } else if (this.getProducerStrategy().toString().equals("QUANTITY")) {
-
-            for (CalcProducer cp : sortQuantityProd) {
-                if (neededEnergy > 0) {
-                    if (cp.getClients().size() < cp.getMaxDistributors()) {
-                        this.actualProd.add(cp);
-                        cp.getClients().add(this);
-                        cp.getClientsId().add(this.id);
-                        neededEnergy -= cp.getEnergyPerDistributor();
-                        sum += cp.getEnergyPerDistributor() * cp.getPriceKW();
-                    }
-                } else {
-                    break;
-                }
-            }
-
-            this.initialProductionCost = (int) Math.round(Math.floor(sum / val1));
+            Context context = new Context(new StrategyQuantity());
+            context.executeStrategy(sortQuantityProd, this);
         }
     }
 
