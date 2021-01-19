@@ -9,6 +9,8 @@ import distributor.OutDistributor;
 import factorypattern.TypeFactory;
 import factorypattern.TypePerson;
 import input.InputData;
+import observerpattern.DistributorObserver;
+import observerpattern.Subject;
 import output.OutputData;
 import producers.OutProducer;
 import producers.Producer;
@@ -92,8 +94,10 @@ public final class Main {
         ArrayList<MonthlyUpdate> updates = input.getMonthlyUpdates();
 
         int len = 0;
-
         ArrayList<CalcDistributor> retainChProd = new ArrayList<>();
+
+        Subject subject = new Subject();
+        new DistributorObserver(subject);
 
         for (MonthlyUpdate u : updates) {
             len++;
@@ -123,20 +127,7 @@ public final class Main {
             sortPriceProd.sort(Main::comparePrice);
             sortQuantityProd.sort(Main::compareQuantity);
 
-            retainChProd.sort(Comparator.comparingInt(CalcDistributor::getId));
-
-            for (CalcDistributor cd : retainChProd) {
-                for (CalcProducer cp : cd.getActualProd()) {
-                        Integer no = cd.getId();
-                        cp.getClientsId().remove(no);
-                        cp.getClients().remove(cd);
-                }
-                cd.getActualProd().clear();
-
-                cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
-            }
-
-            retainChProd.clear();
+            subject.setState(retainChProd, sortGreenProd, sortPriceProd, sortQuantityProd);
 
             for (CalcDistributor cd : distributors) {
                 cd.setContractPrice();
@@ -231,16 +222,7 @@ public final class Main {
         sortPriceProd.sort(Main::comparePrice);
         sortQuantityProd.sort(Main::compareQuantity);
 
-        for (CalcDistributor cd : retainChProd) {
-            for (CalcProducer cp : cd.getActualProd()) {
-                Integer no = cd.getId();
-                cp.getClientsId().remove(no);
-                cp.getClients().remove(cd);
-            }
-            cd.getActualProd().clear();
-
-            cd.chooseProducer(sortGreenProd, sortPriceProd, sortQuantityProd);
-        }
+        subject.setState(retainChProd, sortGreenProd, sortPriceProd, sortQuantityProd);
 
         for (CalcProducer cp : producers) {
             cp.makeMonthStat(len);
